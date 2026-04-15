@@ -11,6 +11,7 @@ struct Settings {
     bool ASPECT_RATIO = true;
     const int MAX_FRAMES_IN_FLIGHT = 2;
     VkSampleCountFlagBits MSAA_SAMPLES = VK_SAMPLE_COUNT_1_BIT;
+    VkFilter FILTER = VK_FILTER_LINEAR;
 };
 
 extern Settings SETTINGS;

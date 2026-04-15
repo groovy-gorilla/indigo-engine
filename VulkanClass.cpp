@@ -1246,8 +1246,8 @@ void VulkanClass::CreateSampler() {
     samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 
     // NAJWAŻNIEJSZE — jakość skalowania
-    samplerInfo.magFilter = VK_FILTER_NEAREST;
-    samplerInfo.minFilter = VK_FILTER_NEAREST;
+    samplerInfo.magFilter = SETTINGS.FILTER;
+    samplerInfo.minFilter = SETTINGS.FILTER;
 
     // adresowanie (poza UV 0–1)
     samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
