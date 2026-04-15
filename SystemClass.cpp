@@ -96,6 +96,14 @@ void SystemClass::Loop() {
             graphics->vulkan->SetMSAA(VK_SAMPLE_COUNT_16_BIT);
         }
 
+        if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
+            graphics->vulkan->SetFilter(VK_FILTER_NEAREST);
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+            graphics->vulkan->SetFilter(VK_FILTER_LINEAR);
+        }
+
 
     }
 

@@ -50,6 +50,7 @@ public:
     void drawFrame(GLFWwindow* window);
     void SetResolution(uint32_t width, uint32_t height);
     void SetMSAA(VkSampleCountFlagBits msaa);
+    void SetFilter(VkFilter filter);
     bool framebufferResized = false;
 
 private:
@@ -127,6 +128,7 @@ private:
     void CreateSyncObjects();
     void RecreateSwapChain(GLFWwindow* window);
     void RecreatePipeline();
+    void RecreateSampler();
     QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
     std::vector<char> ReadFile(const std::string &filename);
     VkShaderModule CreateShaderModule(const std::vector<char> &code);

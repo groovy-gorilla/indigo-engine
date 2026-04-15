@@ -259,6 +259,14 @@ void VulkanClass::SetMSAA(VkSampleCountFlagBits msaa) {
 
 }
 
+void VulkanClass::SetFilter(VkFilter filter) {
+
+    SETTINGS.FILTER = filter;
+
+    RecreateSampler();
+
+}
+
 void VulkanClass::CreateInstance() {
 
     if (enableValidationLayers && !CheckValidationLayerSupport()) {
@@ -1577,10 +1585,7 @@ void VulkanClass::RecreatePipeline() {
 
     vkDeviceWaitIdle(device);
 
-    // =========================
-    // DESTROY
-    // =========================
-
+    // Niszczenie starego
     vkDestroyFramebuffer(device, framebuffer, nullptr);
 
     if (offscreenRenderPass != VK_NULL_HANDLE) {
@@ -1613,10 +1618,7 @@ void VulkanClass::RecreatePipeline() {
         msaaMemory = VK_NULL_HANDLE;
     }
 
-    // =========================
-    // CREATE
-    // =========================
-
+    // Tworzenie nowego
     CreateOffscreenResources();
     CreateMSAAResources();
     CreateOffscreenRenderPass();
@@ -1624,10 +1626,21 @@ void VulkanClass::RecreatePipeline() {
     CreateFramebuffer();
     CreateScenePipeline();
 
-    // =========================
     // DESCRIPTORY (bo imageView się zmienił)
-    // =========================
+    vkResetDescriptorPool(device, descriptorPool, 0);
+    CreateDescriptorSet();
 
+}
+
+void VulkanClass::RecreateSampler() {
+
+    vkDeviceWaitIdle(device);
+
+    // Niszczenie starego
+    vkDestroySampler(device, sampler, nullptr);
+
+    // Tworzenie nowego
+    CreateSampler();
     vkResetDescriptorPool(device, descriptorPool, 0);
     CreateDescriptorSet();
 
