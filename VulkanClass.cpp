@@ -192,7 +192,7 @@ void VulkanClass::drawFrame(GLFWwindow* window) {
         return;
     }
 
-    vkResetCommandBuffer(commandBuffers[currentFrame], /*VkCommandBufferResetFlagBits*/ 0);
+    vkResetCommandBuffer(commandBuffers[currentFrame], 0);
     RecordCommandBuffer(commandBuffers[currentFrame], imageIndex);
 
     VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
@@ -700,7 +700,7 @@ void VulkanClass::CreateImageViews() {
 
 void VulkanClass::CreateOffscreenResources() {
 
-    // 1. Tworzymy obraz (render target)
+    // Tworzymy obraz (render target)
     VkImageCreateInfo imageInfo{};
     imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
     imageInfo.imageType = VK_IMAGE_TYPE_2D;
@@ -712,12 +712,7 @@ void VulkanClass::CreateOffscreenResources() {
     imageInfo.format = swapChainImageFormat;
     imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
     imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-
-    // KLUCZOWE — będziemy renderować i potem czytać w shaderze
-    imageInfo.usage =
-        VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
-        VK_IMAGE_USAGE_SAMPLED_BIT;
-
+    imageInfo.usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
     imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
     imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
@@ -725,11 +720,11 @@ void VulkanClass::CreateOffscreenResources() {
         throw std::runtime_error("Failed to create offscreen image!");
     }
 
-    // 2. Pobranie wymagań pamięci
+    // Pobranie wymagań pamięci
     VkMemoryRequirements memRequirements;
     vkGetImageMemoryRequirements(device, offscreenImage, &memRequirements);
 
-    // 3. Alokacja pamięci
+    // Alokacja pamięci
     VkMemoryAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     allocInfo.allocationSize = memRequirements.size;
@@ -742,10 +737,10 @@ void VulkanClass::CreateOffscreenResources() {
         throw std::runtime_error("Failed to allocate offscreen memory!");
     }
 
-    // 4. Podpięcie pamięci do obrazu
+    // Podpięcie pamięci do obrazu
     vkBindImageMemory(device, offscreenImage, offscreenMemory, 0);
 
-    // 5. Tworzymy ImageView (BARDZO WAŻNE)
+    // Tworzymy ImageView
     VkImageViewCreateInfo viewInfo{};
     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     viewInfo.image = offscreenImage;
@@ -942,7 +937,7 @@ void VulkanClass::CreateFramebuffer() {
         framebufferInfo.renderPass = msaaRenderPass;
     }
 
-    VkImageView attachments[2]; // 🔥 jedna tablica
+    VkImageView attachments[2];
 
     if (SETTINGS.MSAA_SAMPLES == VK_SAMPLE_COUNT_1_BIT) {
 
@@ -1012,18 +1007,15 @@ void VulkanClass::CreateRenderPass() {
 
 void VulkanClass::CreateDescriptorSetLayout() {
 
-    // 1. Binding (czyli sampler2D tex)
+    // Binding (czyli sampler2D tex)
     VkDescriptorSetLayoutBinding samplerBinding{};
     samplerBinding.binding = 0; // musi się zgadzać z shaderem!
     samplerBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
     samplerBinding.descriptorCount = 1;
-
-    // fragment shader używa tekstury
     samplerBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-
     samplerBinding.pImmutableSamplers = nullptr;
 
-    // 2. Layout
+    // Layout
     VkDescriptorSetLayoutCreateInfo layoutInfo{};
     layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
     layoutInfo.bindingCount = 1;
@@ -1284,19 +1276,16 @@ void VulkanClass::CreateSampler() {
 
 void VulkanClass::CreateDescriptorPool() {
 
-    // 1. Typ descriptora (musi pasować do layoutu)
+    // Typ descriptora (musi pasować do layoutu)
     VkDescriptorPoolSize poolSize{};
     poolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
     poolSize.descriptorCount = 1;
 
-    // 2. Tworzenie poola
+    // Tworzenie poola
     VkDescriptorPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-
     poolInfo.poolSizeCount = 1;
     poolInfo.pPoolSizes = &poolSize;
-
-    // ile setów chcesz alokować
     poolInfo.maxSets = 1;
 
     if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
@@ -1307,7 +1296,7 @@ void VulkanClass::CreateDescriptorPool() {
 
 void VulkanClass::CreateDescriptorSet() {
 
-    // 1. Alokacja descriptor seta
+    // Alokacja descriptor seta
     VkDescriptorSetAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     allocInfo.descriptorPool = descriptorPool;
@@ -1318,22 +1307,20 @@ void VulkanClass::CreateDescriptorSet() {
         throw std::runtime_error("Failed to allocate descriptor set!");
     }
 
-    // 2. Opis obrazu (tekstury)
+    // Opis obrazu (tekstury)
     VkDescriptorImageInfo imageInfo{};
     imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     imageInfo.imageView = offscreenImageView;
     imageInfo.sampler = sampler;
 
-    // 3. Update descriptor seta
+    // Update descriptor seta
     VkWriteDescriptorSet descriptorWrite{};
     descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
     descriptorWrite.dstSet = descriptorSet;
     descriptorWrite.dstBinding = 0; // musi się zgadzać z shaderem
     descriptorWrite.dstArrayElement = 0;
-
     descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
     descriptorWrite.descriptorCount = 1;
-
     descriptorWrite.pImageInfo = &imageInfo;
 
     vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
@@ -1466,7 +1453,7 @@ void VulkanClass::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t im
 
     vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, postPipeline);
 
-    // KLUCZOWE — descriptor set (tekstura!)
+    // descriptor set (tekstura)
     vkCmdBindDescriptorSets(
         commandBuffer,
         VK_PIPELINE_BIND_POINT_GRAPHICS,
@@ -1511,7 +1498,9 @@ void VulkanClass::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t im
         scissor2.offset = {static_cast<int>(x), static_cast<int>(y)};
         scissor2.extent = {(uint32_t)width, (uint32_t)height};
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor2);
+
     } else {
+
         VkViewport viewport2{};
         viewport2.x = 0;
         viewport2.y = 0;
@@ -1633,8 +1622,7 @@ void VulkanClass::RecreatePipeline() {
     CreateOffscreenRenderPass();
     CreateMSAARenderPass();
     CreateFramebuffer();
-
-    CreateScenePipeline();          // 🔥 KLUCZOWE (musi być po renderPass!)
+    CreateScenePipeline();
 
     // =========================
     // DESCRIPTORY (bo imageView się zmienił)
