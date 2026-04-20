@@ -2,11 +2,11 @@
 #define INPUTCLASS_H
 #include <GLFW/glfw3.h>
 
-class InputClass {
+class Input {
 
 public:
-    InputClass();
-    ~InputClass();
+    Input();
+    ~Input();
     void Initialize();
     void Shutdown();
     void BeginProcessInput(GLFWwindow* window);
@@ -16,8 +16,8 @@ public:
     bool IsReleased(int key);
 
 private:
-    bool prev[GLFW_KEY_LAST] = {};
-    bool curr[GLFW_KEY_LAST] = {};
+    bool m_prev[GLFW_KEY_LAST] = {};
+    bool m_curr[GLFW_KEY_LAST] = {};
 
 };
 

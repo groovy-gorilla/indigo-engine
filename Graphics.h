@@ -2,17 +2,18 @@
 #define GRAPHICSCLASS_H
 #include <GLFW/glfw3.h>
 
-#include "VulkanClass.h"
+#include "Vulkan.h"
+#include "Texture.h"
 
-class GraphicsClass {
+class Graphics {
 
 public:
-    GraphicsClass();
-    ~GraphicsClass();
+    Graphics();
+    ~Graphics();
     void Initialize(GLFWwindow *window);
     void Shutdown();
 
-    VulkanClass *vulkan;
+    Vulkan *m_vulkan;
 
 private:
 

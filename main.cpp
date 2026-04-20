@@ -1,28 +1,23 @@
-#include <iostream>
+#include "ErrorDialog.h"
+#include <memory>
 
-#include "SystemClass.h"
-#include "Settings.h"
+#include "System.h"
+#include "Global.h"
 
 Settings SETTINGS;
 
 int main() {
 
-    SystemClass *System = new SystemClass;
+    // Inteligentny wskaźnik
+    auto system = std::make_unique<System>();
+
 
     try {
-        System->Initialize();
-        System->Run();
-    } catch (std::exception &e) {
-        std::cerr << "Exception: " << e.what() << std::endl;
-        System->Shutdown();
-        delete System;
-        System = nullptr;
-        return EXIT_FAILURE;
+        system->Initialize();
+        system->Run();
+    } catch (const std::exception &e) {
+        ShowErrorDialog(EscapeMarkup(e.what()));
     }
-
-    System->Shutdown();
-    delete System;
-    System = nullptr;
 
     return EXIT_SUCCESS;
 

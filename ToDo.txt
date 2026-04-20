@@ -1,7 +1,7 @@
-- Błąd walidacji przy przełączaniu naprzemiennie ASPECT_RATIO / MSAA
-- lista trybów (lista obsługiwanych rozdzielczości)
-- klawisze + i - zwiększają/zmiejszają rozdzielczość
-- wyświetlanie klatek na sekundę
+- dokończ TextureClass (GetTextureView i GetSampler)
+- FontClass
+- TextClass
+- FPSClass wyświetlanie klatek na sekundę
 - vsync prawdziwy
 - InputClass (myszka)
 

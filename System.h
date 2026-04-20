@@ -4,23 +4,22 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-#include "GraphicsClass.h"
-#include "InputClass.h"
-#include "Settings.h"
+#include "Graphics.h"
+#include "Input.h"
 
-class SystemClass {
+class System {
 
 public:
-    SystemClass();
-    ~SystemClass();
+    System();
+    ~System();
     void Initialize();
     void Shutdown();
     void Run();
 
 private:
-    GLFWwindow *window;
-    GraphicsClass *graphics;
-    InputClass *input;
+    GLFWwindow *m_window;
+    Graphics *m_graphics;
+    Input *m_input;
 
     void InitializeWindow();
     void ShutdownWindow();

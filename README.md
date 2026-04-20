@@ -1,19 +1,49 @@
-# TFX
+# Vulkan Game Engine
 
-TFX is a game written in C++ using Vulkan.
+Custom 2D/3D game engine written in C++ and Vulkan.
 
 ## Overview
-TFX is a personal project focused on learning low-level graphics programming
-by building a game from scratch using Vulkan.
+This project is a custom game engine written in C++ using Vulkan.  
+The goal is to build a clean, modular architecture for rendering, input, and resource management.  
 
-The project explores how rendering, synchronization, and GPU communication
-work under the hood.
+The engine will be used as a foundation for future game projects.
 
-## Features
+## Goals
+
+- Clean and simple architecture
 - Vulkan-based rendering
-- Window creation (GLFW)
-- Swapchain management
-- Basic rendering pipeline
+- Separation of data and rendering logic
+- Expandable for future features
+
+## Project Structure
+<pre style="line-height: 13px; font-size: 12px;">
+Main
+ :
+ ├── System
+ │    :
+ │    ├── Graphics
+ │    │    :
+ │    │    ├── Vulkan
+ │    │    │
+ │    │    ├── Texture
+ │    │    │
+ │    │    ├── Bitmap
+ │    │    │    :
+ │    │    │    └── BitmapRenderer
+ │    │    │ 
+ │    │    ├── Font
+ │    │    │    :
+ │    │    │    └── Text
+ │    │    │         :
+ │    │    │         └── TextRenderer
+ │    │    └── Renderer
+ │    │
+ │    └── Input
+ │
+ ├── ErrorDialog
+ │
+ └── Global
+</pre>
 
 ## Build
 

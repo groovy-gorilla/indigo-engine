@@ -1,31 +1,37 @@
 #ifndef VULKANCLASS_H
 #define VULKANCLASS_H
+
+#include "Global.h"
 #include <optional>
 #include <vector>
 #include <vulkan/vulkan_core.h>
 #include <GLFW/glfw3.h>
 #include <fstream>
 
-
-
-class VulkanClass {
+class Vulkan {
 
 public:
-    VulkanClass();
-    ~VulkanClass();
+    struct Resolution { int w; int h; std::string ratio; };
+
+    Vulkan();
+    ~Vulkan();
 
     void Initialize(GLFWwindow *window);
     void Shutdown();
 
     VkDevice GetDevice();
     void DrawFrame(GLFWwindow* window);
-    void SetResolution(uint32_t width, uint32_t height);
+    void SetResolution(GLFWwindow* window, uint32_t width, uint32_t height);
     void SetMSAA(VkSampleCountFlagBits msaa);
     void SetFilter(VkFilter filter);
     void SetFramebufferResized(bool value);
     void SetAspectRatioEnabled(bool value);
+    void SetFullscreenEnabled(GLFWwindow* window, bool value);
+    std::vector<Resolution> GetVideoModes();
+    VulkanContext GetContext() const;
 
 private:
+
     struct SwapChainSupportDetails {
         VkSurfaceCapabilitiesKHR capabilities;
         std::vector<VkSurfaceFormatKHR> formats;
@@ -45,50 +51,51 @@ private:
 
 
     #ifdef NDEBUG
-        const bool enableValidationLayers = false;
+        static constexpr bool enableValidationLayers = false;
     #else
-        const bool enableValidationLayers = true;
+        static constexpr bool enableValidationLayers = true;
     #endif
 
-    VkInstance instance;
-    VkDebugUtilsMessengerEXT debugMessenger;
-    VkSurfaceKHR surface;
-    VkPhysicalDevice physicalDevice;
-    VkDevice device;
-    VkQueue graphicsQueue;
-    VkQueue presentQueue;
-    VkSwapchainKHR swapChain;
-    std::vector<VkImage> swapChainImages;
-    VkFormat swapChainImageFormat;
-    VkExtent2D swapChainExtent;
-    std::vector<VkImageView> swapChainImageViews;
-    VkImage offscreenImage;
-    VkDeviceMemory offscreenMemory;
-    VkImageView offscreenImageView;
-    VkImage msaaImage;
-    VkDeviceMemory msaaMemory;
-    VkImageView msaaImageView;
-    VkRenderPass offscreenRenderPass;
-    VkRenderPass msaaRenderPass;
-    VkFramebuffer framebuffer;
-    VkRenderPass renderPass;
-    VkDescriptorSetLayout descriptorSetLayout;
-    VkPipelineLayout scenePipelineLayout;
-    VkPipeline scenePipeline;
-    VkPipelineLayout postPipelineLayout;
-    VkPipeline postPipeline;
-    VkSampler sampler;
-    VkDescriptorPool descriptorPool;
-    VkDescriptorSet descriptorSet;
-    std::vector<VkFramebuffer> swapChainFramebuffers;
-    VkCommandPool commandPool;
-    std::vector<VkCommandBuffer> commandBuffers;
-    std::vector<VkSemaphore> imageAvailableSemaphores;
-    std::vector<VkSemaphore> renderFinishedSemaphores;
-    std::vector<VkFence> inFlightFences;
-    std::vector<VkSampleCountFlagBits> msaaSamples;
-    uint32_t currentFrame = 0;
-    bool framebufferResized = false;
+    VkInstance m_instance;
+    VkDebugUtilsMessengerEXT m_debugMessenger;
+    VkSurfaceKHR m_surface;
+    VkPhysicalDevice m_physicalDevice;
+    VkDevice m_device;
+    VkQueue m_graphicsQueue;
+    VkQueue m_presentQueue;
+    VkSwapchainKHR m_swapChain;
+    std::vector<VkImage> m_swapChainImages;
+    VkFormat m_swapChainImageFormat;
+    VkExtent2D m_swapChainExtent;
+    std::vector<VkImageView> m_swapChainImageViews;
+    VkImage m_offscreenImage;
+    VkDeviceMemory m_offscreenMemory;
+    VkImageView m_offscreenImageView;
+    VkImage m_msaaImage;
+    VkDeviceMemory m_msaaMemory;
+    VkImageView m_msaaImageView;
+    VkRenderPass m_offscreenRenderPass;
+    VkRenderPass m_msaaRenderPass;
+    VkFramebuffer m_framebuffer;
+    VkRenderPass m_renderPass;
+    VkDescriptorSetLayout m_descriptorSetLayout;
+    VkPipelineLayout m_scenePipelineLayout;
+    VkPipeline m_scenePipeline;
+    VkPipelineLayout m_postPipelineLayout;
+    VkPipeline m_postPipeline;
+    VkSampler m_sampler;
+    VkDescriptorPool m_descriptorPool;
+    VkDescriptorSet m_descriptorSet;
+    std::vector<VkFramebuffer> m_swapChainFramebuffers;
+    VkCommandPool m_commandPool;
+    std::vector<VkCommandBuffer> m_commandBuffers;
+    std::vector<VkSemaphore> m_imageAvailableSemaphores;
+    std::vector<VkSemaphore> m_renderFinishedSemaphores;
+    std::vector<VkFence> m_inFlightFences;
+    std::vector<VkSampleCountFlagBits> m_msaaSamples;
+    std::vector<Resolution> m_videoModes;
+    uint32_t m_currentFrame = 0;
+    bool m_framebufferResized = false;
 
     void CreateInstance();
     bool CheckValidationLayerSupport();
@@ -96,6 +103,7 @@ private:
     void SetupDebugMessenger();
     void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
     void CreateSurface(GLFWwindow *window);
+    void CreateSupportedVideoModes();
     void PickPhysicalDevice();
     bool CheckDeviceExtensionSupport(VkPhysicalDevice physicalDevice);
     void CreateSupportedSampleCounts(VkPhysicalDevice physicalDevice);
