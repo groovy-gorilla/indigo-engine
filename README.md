@@ -1,4 +1,4 @@
-# Vulkan Engine
+# Indigo Engine
 
 Custom 2D/3D game engine written in C++ and Vulkan.
 
