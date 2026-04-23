@@ -23,7 +23,7 @@ config:
     treeView:
         rowIndent: 20
         lineThickness: 1
-        paddingX: 20
+        paddingX: 5
         paddingY: 5
     themeVariables:
         treeView:
@@ -32,10 +32,10 @@ config:
             lineColor: '#808080'
 ---
 treeView-beta
-    "packages"
-        "mermaid"
-            "src"
-        "parser"
+"Main"
+"System"
+"Graphics"
+"Vulkan"
 ```
 
 ```
