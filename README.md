@@ -17,27 +17,6 @@ The engine will be used as a foundation for future game projects.
 
 ## Project Structure
 
-```mermaid
----
-config:
-    treeView:
-        rowIndent: 20
-        lineThickness: 1
-        paddingX: 5
-        paddingY: 5
-    themeVariables:
-        treeView:
-            labelFontSize: '12px'
-            labelColor: '#808080'
-            lineColor: '#808080'
----
-treeView-beta
-"Main"
- "System"
- "Graphics"
-  "Vulkan"
-```
-
 ```
 Main
  ├── System
