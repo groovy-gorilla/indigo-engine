@@ -19,8 +19,8 @@ The engine will be used as a foundation for future game projects.
 
 ```
 Main
-├── System
-│   ├── Graphics
+ ├── System
+ │    ├── Graphics
  │    │    ├── Vulkan
  │    │    ├── Texture
  │    │    ├── Bitmap
