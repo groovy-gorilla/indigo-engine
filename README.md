@@ -23,8 +23,8 @@ config:
     treeView:
         rowIndent: 20
         lineThickness: 1
-        paddingX: 5
-        paddingY: 20
+        paddingX: 20
+        paddingY: 5
     themeVariables:
         treeView:
             labelFontSize: '8px'
