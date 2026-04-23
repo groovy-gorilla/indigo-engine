@@ -18,7 +18,7 @@ The engine will be used as a foundation for future game projects.
 ## Project Structure
 
 ```mermaid
-graph TD
+graph LR
 Main
 
 Main --> System
